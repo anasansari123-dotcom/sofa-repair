@@ -80,8 +80,11 @@ export function ContactSection({ showHeader = true }: { showHeader?: boolean }) 
                 </a>{" "}
                 for doorstep service across Gurugram.
               </p>
-              <div className="mt-1 flex flex-wrap gap-3">
-                <a href={`tel:${settings.phoneRaw}`} className="btn-primary btn-warm inline-flex text-sm">
+              <div className="mt-1 flex flex-row gap-2 sm:gap-3">
+                <a
+                  href={`tel:${settings.phoneRaw}`}
+                  className="btn-primary btn-warm inline-flex flex-1 justify-center text-sm whitespace-nowrap"
+                >
                   <Phone className="h-4 w-4" />
                   Call Now
                 </a>
@@ -89,7 +92,7 @@ export function ContactSection({ showHeader = true }: { showHeader?: boolean }) 
                   href={settings.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-outline inline-flex text-sm"
+                  className="btn-outline inline-flex flex-1 justify-center text-sm whitespace-nowrap"
                 >
                   <MapPin className="h-4 w-4" />
                   Directions
