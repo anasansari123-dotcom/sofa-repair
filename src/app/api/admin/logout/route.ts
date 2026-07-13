@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { clearAdminSession } from "@/lib/auth";
+import { clearAdminSessionCookie } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function POST() {
-  await clearAdminSession();
-  return NextResponse.json({ success: true });
+  const response = NextResponse.json({ success: true });
+  return clearAdminSessionCookie(response);
 }

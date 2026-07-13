@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SectionHeader } from "@/components/sections/SectionHeader";
 import { ServicesGrid } from "@/components/sections/Services";
 import { ServiceCategories } from "@/components/sections/ServiceCategories";
@@ -5,11 +6,26 @@ import { RepairProcess } from "@/components/sections/RepairProcess";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { PageBanner } from "@/components/sections/PageBanner";
 import { PAGE_BANNERS } from "@/lib/images";
+import { absoluteUrl } from "@/lib/seo";
 
-export const metadata = {
-  title: "Services | Tanseer Sofa Repairing Gurgaon",
+export const metadata: Metadata = {
+  title: "Sofa Repair Services Gurgaon",
   description:
-    "Sofa & bed repair collections — Chesterfield, L-shape, recliner, upholstered beds and more. Doorstep service in Gurugram.",
+    "Complete sofa repair services in Gurgaon & Gurugram — Chesterfield, L-shape, recliner, sofa cum bed, beds, wall panels and premium upholstery. Doorstep service by Tanseer.",
+  keywords: [
+    "sofa repair services Gurgaon",
+    "recliner repair Gurgaon",
+    "L shape sofa repair Gurugram",
+    "upholstery services Gurgaon",
+    "bed repair Gurgaon",
+  ],
+  alternates: { canonical: absoluteUrl("/services") },
+  openGraph: {
+    title: "Sofa Repair Services in Gurgaon & Gurugram | Tanseer",
+    description:
+      "Sofa, recliner, bed and wall panel repair — doorstep service across Gurugram.",
+    url: absoluteUrl("/services"),
+  },
 };
 
 export default function ServicesPage() {
@@ -20,7 +36,7 @@ export default function ServicesPage() {
         title="Sofa & Bed Solutions"
         description="Browse every sofa style and bed type we repair at your doorstep"
         image={PAGE_BANNERS.services}
-        imageAlt="Sofa repair services"
+        imageAlt="Sofa repair services in Gurgaon"
       />
 
       <section className="section-padding pattern-dots bg-cream">

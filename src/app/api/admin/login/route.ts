@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { setAdminSession, verifyPassword } from "@/lib/auth";
+import { applyAdminSessionCookie, verifyPassword } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
@@ -9,9 +11,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
-    await setAdminSession();
-    return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Login failed" }, { status: 500 });
+    const response = NextResponse.json({ success: true });
+    return applyAdminSessionCookie(response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Login failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

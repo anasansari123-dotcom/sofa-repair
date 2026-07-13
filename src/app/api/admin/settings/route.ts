@@ -3,13 +3,20 @@ import { isAdminAuthenticated } from "@/lib/auth";
 import { getSiteSettings, updateSiteSettings } from "@/lib/settings";
 import type { SiteSettingsData } from "@/lib/defaults";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const settings = await getSiteSettings();
-  return NextResponse.json(settings);
+  try {
+    const settings = await getSiteSettings();
+    return NextResponse.json(settings);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to load settings";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
 
 export async function PUT(request: Request) {
@@ -26,7 +33,8 @@ export async function PUT(request: Request) {
 
     const updated = await updateSiteSettings(body);
     return NextResponse.json(updated);
-  } catch {
-    return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Update failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

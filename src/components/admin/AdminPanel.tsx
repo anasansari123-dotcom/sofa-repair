@@ -22,21 +22,28 @@ export function AdminPanel({ initialSettings }: { initialSettings: SiteSettingsD
     const res = await fetch("/api/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ password }),
     });
 
     if (res.ok) {
       setAuthenticated(true);
-      const data = await fetch("/api/admin/settings");
-      if (data.ok) setSettings(await data.json());
+      const data = await fetch("/api/admin/settings", { credentials: "include" });
+      if (data.ok) {
+        setSettings(await data.json());
+      } else if (data.status === 401) {
+        setAuthenticated(false);
+        setMessage("Login cookie was not set. Check ADMIN_SECRET on Vercel and try again.");
+      }
     } else {
-      setMessage("Wrong password");
+      const err = await res.json().catch(() => ({ error: "Wrong password" }));
+      setMessage(err.error || "Wrong password");
     }
     setLoading(false);
   };
 
   const handleLogout = async () => {
-    await fetch("/api/admin/logout", { method: "POST" });
+    await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
     setAuthenticated(false);
     setPassword("");
   };
@@ -49,15 +56,24 @@ export function AdminPanel({ initialSettings }: { initialSettings: SiteSettingsD
     const res = await fetch("/api/admin/settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(settings),
     });
 
+    const payload = await res.json().catch(() => ({}));
+
     if (res.ok) {
-      setSettings(await res.json());
+      setSettings(payload);
       setMessage("Saved successfully! Refresh website to see changes.");
-    } else {
-      setMessage("Failed to save. Please login again.");
+    } else if (res.status === 401) {
+      setMessage("Session expired. Please login again.");
       setAuthenticated(false);
+    } else {
+      setMessage(
+        typeof payload.error === "string"
+          ? payload.error
+          : "Failed to save settings. Check MongoDB connection on Vercel."
+      );
     }
     setLoading(false);
   };

@@ -1,7 +1,7 @@
 export const SITE = {
-  name: "Tanseer Sofa Repairing",
+  name: "Tanseer Sofa Repair And Home Service",
   shortName: "Tanseer",
-  tagline: "Expert Sofa Repair & Upholstery",
+  tagline: "Sofa Repair Gurgaon & Gurugram — Doorstep Home Service",
   location: "Gurugram",
   phone: "+91 91704 63193",
   phoneRaw: "919170463193",
@@ -15,7 +15,7 @@ export const SITE = {
   mapUrl: "https://maps.app.goo.gl/XQSZtDW4tc8Jsgws5?g_st=ac",
   hours: "Mon - Sat: 8:00 AM - 8:00 PM",
   description:
-    "Professional doorstep sofa, dining chair, bed & furniture repair, upholstery and restoration in Gurugram. Trusted craftsmanship with premium materials.",
+    "Professional doorstep sofa repair, dining chair, bed & furniture repair, upholstery and restoration in Gurgaon & Gurugram. Trusted craftsmanship with premium materials.",
 } as const;
 
 export const SOCIAL_LINKS = [
@@ -222,26 +222,26 @@ export const FAQ_ITEMS = [
   {
     question: "Do you provide doorstep sofa repair in Gurgaon?",
     answer:
-      "Yes! We specialize in doorstep repair across Gurgaon and NCR. Our team brings tools and materials to your home.",
+      "Yes! Tanseer Sofa Repair And Home Service specializes in doorstep sofa repair across Gurgaon, Gurugram and NCR including Palam Vihar. Our team brings tools and materials to your home.",
   },
   {
-    question: "How long does a typical sofa repair take?",
+    question: "How long does a typical sofa repair take in Gurugram?",
     answer:
-      "Most repairs complete within 24–48 hours. Complex restorations may take 3–5 days with a clear timeline upfront.",
+      "Most sofa repairs in Gurgaon complete within 24–48 hours. Complex restorations may take 3–5 days with a clear timeline upfront.",
   },
   {
-    question: "What types of furniture do you repair?",
+    question: "What types of furniture do you repair in Gurgaon?",
     answer:
-      "Sofas, dining chair sets, beds, headboards, recliners, sectionals, Chesterfield, L-shape, U-shape, sofa cum bed, cushions and more — all at your doorstep.",
+      "Sofas, dining chair sets, beds, headboards, recliners, sectionals, Chesterfield, L-shape, U-shape, sofa cum bed, cushions, wall panels and more — all at your doorstep in Gurugram.",
   },
   {
-    question: "Do you offer a warranty?",
+    question: "Do you offer a warranty on sofa repair in Gurgaon?",
     answer:
-      "Yes. All services include warranty from 3 months to 2 years depending on the repair type.",
+      "Yes. All Tanseer sofa repair and upholstery services in Gurgaon include warranty from 3 months to 2 years depending on the repair type.",
   },
   {
-    question: "How do I get a price quote?",
+    question: "How do I get a sofa repair price quote in Gurgaon?",
     answer:
-      "Book a free consultation via phone, WhatsApp, or our contact form for a transparent quote.",
+      "Book a free consultation via phone (+91 91704 63193), WhatsApp, or our contact form for a transparent doorstep quote in Gurugram.",
   },
 ] as const;

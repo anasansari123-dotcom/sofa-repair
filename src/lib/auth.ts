@@ -1,36 +1,67 @@
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import crypto from "crypto";
 
-const COOKIE_NAME = "tanseer_admin";
+export const ADMIN_COOKIE_NAME = "tanseer_admin";
 
-function getToken() {
-  const secret = process.env.ADMIN_SECRET || "tanseer-dev-secret";
-  return crypto.createHmac("sha256", secret).update("admin-session").digest("hex");
+function getSecret() {
+  const secret = process.env.ADMIN_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("ADMIN_SECRET environment variable is required in production");
+    }
+    return "tanseer-dev-secret";
+  }
+  return secret;
 }
 
-export async function setAdminSession() {
-  const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, getToken(), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
+export function getSessionToken() {
+  return crypto.createHmac("sha256", getSecret()).update("admin-session").digest("hex");
+}
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+  maxAge: 60 * 60 * 24 * 7,
+};
+
+/**
+ * IMPORTANT (Vercel): set cookies on the NextResponse object.
+ * cookies().set() from next/headers often does NOT attach Set-Cookie
+ * on Route Handler responses in production serverless.
+ */
+export function applyAdminSessionCookie(response: NextResponse) {
+  response.cookies.set(ADMIN_COOKIE_NAME, getSessionToken(), cookieOptions);
+  return response;
+}
+
+export function clearAdminSessionCookie(response: NextResponse) {
+  response.cookies.set(ADMIN_COOKIE_NAME, "", {
+    ...cookieOptions,
+    maxAge: 0,
   });
-}
-
-export async function clearAdminSession() {
-  const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
+  return response;
 }
 
 export async function isAdminAuthenticated() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME)?.value;
-  return token === getToken();
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
+    return token === getSessionToken();
+  } catch {
+    return false;
+  }
 }
 
 export function verifyPassword(password: string) {
-  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    if (process.env.NODE_ENV === "production") {
+      return false;
+    }
+    return password === "admin123";
+  }
   return password === adminPassword;
 }

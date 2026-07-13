@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Phone, Mail, MapPin, Send, Clock, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,6 +54,51 @@ export function ContactSection({ showHeader = true }: { showHeader?: boolean }) 
             description={`Get in touch for a free doorstep assessment in ${settings.location}.`}
           />
         )}
+
+        <div className="mb-10 overflow-hidden rounded-2xl border border-border/80 bg-white shadow-sm lg:mb-12">
+          <div className="grid lg:grid-cols-5">
+            <div className="relative aspect-[4/3] lg:col-span-3 lg:aspect-auto lg:min-h-[320px]">
+              <Image
+                src="/contactimage.jpeg"
+                alt="Tanseer Sofa Repair And Home Service — Gurgaon storefront"
+                fill
+                className="object-cover object-center"
+                sizes="(max-width:1024px) 100vw, 60vw"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-navy/20" />
+            </div>
+            <div className="flex flex-col justify-center gap-4 p-6 sm:p-8 lg:col-span-2">
+              <p className="text-xs font-bold tracking-[0.2em] text-tan uppercase">Visit Us</p>
+              <h2 className="font-[family-name:var(--font-montserrat)] text-2xl font-bold text-navy sm:text-3xl">
+                Tanseer Sofa Repair
+              </h2>
+              <p className="text-sm leading-relaxed text-muted">
+                Sofa repair and home service in Gurgaon. Call{" "}
+                <a href={`tel:${settings.phoneRaw}`} className="font-semibold text-navy hover:text-tan-dark">
+                  {settings.phone}
+                </a>{" "}
+                for doorstep service across Gurugram.
+              </p>
+              <div className="mt-1 flex flex-wrap gap-3">
+                <a href={`tel:${settings.phoneRaw}`} className="btn-primary btn-warm inline-flex text-sm">
+                  <Phone className="h-4 w-4" />
+                  Call Now
+                </a>
+                <a
+                  href={settings.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-outline inline-flex text-sm"
+                >
+                  <MapPin className="h-4 w-4" />
+                  Directions
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
           <form
             onSubmit={handleSubmit}
