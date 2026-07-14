@@ -4,6 +4,9 @@ import { Footer } from "@/components/layout/Footer";
 import { FloatingButtons } from "@/components/layout/FloatingButtons";
 import { getSiteSettings } from "@/lib/settings";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

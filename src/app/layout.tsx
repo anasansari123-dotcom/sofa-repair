@@ -14,6 +14,9 @@ import {
 } from "@/lib/seo";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],

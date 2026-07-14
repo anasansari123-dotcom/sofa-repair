@@ -4,6 +4,7 @@ import { getSiteSettings, updateSiteSettings } from "@/lib/settings";
 import type { SiteSettingsData } from "@/lib/defaults";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   if (!(await isAdminAuthenticated())) {
@@ -12,7 +13,9 @@ export async function GET() {
 
   try {
     const settings = await getSiteSettings();
-    return NextResponse.json(settings);
+    return NextResponse.json(settings, {
+      headers: { "Cache-Control": "no-store" },
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to load settings";
     return NextResponse.json({ error: message }, { status: 500 });
@@ -32,7 +35,11 @@ export async function PUT(request: Request) {
     }
 
     const updated = await updateSiteSettings(body);
-    return NextResponse.json(updated);
+    return NextResponse.json(updated, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Update failed";
     return NextResponse.json({ error: message }, { status: 500 });

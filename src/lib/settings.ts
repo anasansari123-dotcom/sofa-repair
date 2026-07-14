@@ -1,10 +1,50 @@
+import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import { SiteSettingsModel } from "@/lib/models/SiteSettings";
 import { DEFAULT_SETTINGS, type SiteSettingsData } from "@/lib/defaults";
 
 export type { SiteSettingsData };
 
+function mapDoc(doc: {
+  phone: string;
+  phoneRaw: string;
+  email: string;
+  whatsapp: string;
+  address: string;
+  mapUrl: string;
+  hours: string;
+  location: string;
+  instagram: string;
+  facebook: string;
+  youtube: string;
+  heroSlides: { src: string; title: string; subtitle: string }[];
+}): SiteSettingsData {
+  return {
+    phone: doc.phone,
+    phoneRaw: doc.phoneRaw,
+    email: doc.email,
+    whatsapp: doc.whatsapp,
+    address: doc.address,
+    mapUrl: doc.mapUrl,
+    hours: doc.hours,
+    location: doc.location,
+    instagram: doc.instagram,
+    facebook: doc.facebook,
+    youtube: doc.youtube,
+    heroSlides: (doc.heroSlides?.length ? doc.heroSlides : DEFAULT_SETTINGS.heroSlides).map(
+      (s) => ({
+        src: s.src,
+        title: s.title,
+        subtitle: s.subtitle,
+      })
+    ),
+  };
+}
+
 export async function getSiteSettings(): Promise<SiteSettingsData> {
+  // Always read fresh from DB — never serve a statically cached snapshot
+  noStore();
+
   try {
     await connectDB();
     let doc = await SiteSettingsModel.findById("site").lean();
@@ -13,62 +53,53 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       doc = await SiteSettingsModel.create({ _id: "site", ...DEFAULT_SETTINGS });
     }
 
-    const defaultHero = DEFAULT_SETTINGS.heroSlides;
-    const heroOutOfDate =
-      !doc.heroSlides?.length ||
-      doc.heroSlides.length !== defaultHero.length ||
-      doc.heroSlides[0]?.src !== defaultHero[0].src;
-
-    if (heroOutOfDate) {
-      await SiteSettingsModel.findByIdAndUpdate("site", { heroSlides: defaultHero });
-      doc = { ...doc, heroSlides: defaultHero };
+    // Only seed hero slides when empty — never overwrite admin edits
+    if (!doc.heroSlides?.length) {
+      await SiteSettingsModel.findByIdAndUpdate("site", {
+        heroSlides: DEFAULT_SETTINGS.heroSlides,
+      });
+      doc = { ...doc, heroSlides: [...DEFAULT_SETTINGS.heroSlides] };
     }
 
-    return {
-      phone: doc.phone,
-      phoneRaw: doc.phoneRaw,
-      email: doc.email,
-      whatsapp: doc.whatsapp,
-      address: doc.address,
-      mapUrl: doc.mapUrl,
-      hours: doc.hours,
-      location: doc.location,
-      instagram: doc.instagram,
-      facebook: doc.facebook,
-      youtube: doc.youtube,
-      heroSlides: doc.heroSlides.map((s) => ({
-        src: s.src,
-        title: s.title,
-        subtitle: s.subtitle,
-      })),
-    };
-  } catch {
+    return mapDoc(doc);
+  } catch (error) {
+    console.error("[getSiteSettings]", error);
     return DEFAULT_SETTINGS;
   }
 }
 
 export async function updateSiteSettings(data: SiteSettingsData) {
+  noStore();
   await connectDB();
+
   const updated = await SiteSettingsModel.findByIdAndUpdate(
     "site",
-    { ...data },
-    { new: true, upsert: true, setDefaultsOnInsert: true }
+    {
+      phone: data.phone,
+      phoneRaw: data.phoneRaw,
+      email: data.email,
+      whatsapp: data.whatsapp,
+      address: data.address,
+      mapUrl: data.mapUrl,
+      hours: data.hours,
+      location: data.location,
+      instagram: data.instagram,
+      facebook: data.facebook,
+      youtube: data.youtube,
+      heroSlides: data.heroSlides,
+    },
+    { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true }
   ).lean();
 
   if (!updated) throw new Error("Failed to update settings");
 
-  return {
-    phone: updated.phone,
-    phoneRaw: updated.phoneRaw,
-    email: updated.email,
-    whatsapp: updated.whatsapp,
-    address: updated.address,
-    mapUrl: updated.mapUrl,
-    hours: updated.hours,
-    location: updated.location,
-    instagram: updated.instagram,
-    facebook: updated.facebook,
-    youtube: updated.youtube,
-    heroSlides: updated.heroSlides,
-  };
+  // Bust cached pages so the public site shows new data immediately
+  revalidatePath("/", "layout");
+  revalidatePath("/contact");
+  revalidatePath("/about");
+  revalidatePath("/services");
+  revalidatePath("/gallery");
+  revalidatePath("/admin");
+
+  return mapDoc(updated);
 }
