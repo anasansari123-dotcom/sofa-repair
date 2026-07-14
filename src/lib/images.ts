@@ -32,6 +32,10 @@ export const GALLERY_CATEGORIES = [
       "/chesterdfield/7c74a821a4474f79658cbb3a52abbdc0.jpg",
       "/chesterdfield/83e81cdca796a8463acf7100659623e2.jpg",
       "/chesterdfield/9d8fe63ba442201e30b974a58410fdbc.jpg",
+      "/chesterdfield/0268ab02c7f618da243a068841aaa90b.jpg",
+      "/chesterdfield/31e2f8227fc68edafb361696f18985d8.jpg",
+      "/chesterdfield/5ec448529cf1232ff21e61a759f4364d.jpg",
+      "/chesterdfield/c8d8ee15f306db56bd535ff39cc1170b.jpg",
     ],
   },
   {
@@ -88,20 +92,6 @@ export const GALLERY_CATEGORIES = [
     ],
   },
   {
-    name: "Dining Chairs",
-    slug: "dining-chairs",
-    description: "Dining chair set upholstery, polish and structural repair for all seaters.",
-    cover: "/chesterdfield/7c74a821a4474f79658cbb3a52abbdc0.jpg",
-    images: [
-      "/chesterdfield/0268ab02c7f618da243a068841aaa90b.jpg",
-      "/chesterdfield/7c74a821a4474f79658cbb3a52abbdc0.jpg",
-      "/chesterdfield/31e2f8227fc68edafb361696f18985d8.jpg",
-      "/chesterdfield/5ec448529cf1232ff21e61a759f4364d.jpg",
-      "/chesterdfield/c8d8ee15f306db56bd535ff39cc1170b.jpg",
-      "/chesterdfield/chesterfield-design-9.jpg",
-    ],
-  },
-  {
     name: "Beds",
     slug: "beds",
     description: "Platform, storage and upholstered bed frame repair with premium fabrics.",
@@ -118,10 +108,10 @@ export const GALLERY_CATEGORIES = [
     ],
   },
   {
-    name: "Dining Area",
-    slug: "dining-area",
+    name: "Dining Chairs",
+    slug: "dining-chairs",
     description:
-      "Elegant dining-area interiors with feature walls, moulding panels and luxury dining setups.",
+      "Dining chair set upholstery, polish and structural repair for all seaters — elegant dining setups.",
     cover: "/wall-panels/dining/D1.png",
     images: [
       "/wall-panels/dining/D1.png",
@@ -198,7 +188,7 @@ export const GALLERY_ALL_IMAGES: string[] = (() => {
     "/wall-panels/dining/D5.png",
     "/wall-panels/dining/D6.png",
   ];
-  const picks = GALLERY_CATEGORIES.filter((cat) => cat.slug !== "dining-area").map((cat) =>
+  const picks = GALLERY_CATEGORIES.filter((cat) => cat.slug !== "dining-chairs").map((cat) =>
     cat.images.filter((src) => !diningFeature.includes(src)).slice(0, 2)
   );
   const mixed: string[] = [...diningFeature];

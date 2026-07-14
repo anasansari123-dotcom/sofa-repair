@@ -7,6 +7,7 @@ import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { RepairProcess } from "@/components/sections/RepairProcess";
 import { GalleryPreview } from "@/components/sections/Gallery";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { StorefrontSection } from "@/components/sections/StorefrontSection";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { SEO_DEFAULT_DESCRIPTION, absoluteUrl } from "@/lib/seo";
 
@@ -32,6 +33,7 @@ export default function HomePage() {
       <AboutSection />
       <ServicesPreview />
       <WhyChooseUs />
+      <StorefrontSection />
       <RepairProcess />
       <GalleryPreview />
       <Testimonials />
